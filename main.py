@@ -9,7 +9,9 @@ def menu():
 
         match choice:
             case '1':
-                print('Logged In')
+                print('========== LOG IN ==========')
+                username = input('Enter Username: ')
+                password = input('Password: ')
             case '2':
                 print('Terminating program...')
                 break

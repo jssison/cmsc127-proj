@@ -2,15 +2,22 @@ import mariadb
 import sys
 import create
 import populate
+import views
+
+#NOTES:
+# use cur.execute(<query>) to run SQL queries
+# use conn.commit() to commit changes to the database
+# remember to edit in credentials to connect
 
 # Connect to mariadb
 try:
-    # Credentials
+    # Connection credentials
+    # Connect to mariadb via conn
     conn = mariadb.connect(
         user = 'root',          #Change if desired
-        password = '', #Password for desired user
+        password = '',          #Password for desired user
         host = 'localhost',
-        database = ''       #Insert 127 database here
+        database = ''           #Insert 127 database here
     )
 except mariadb.Error as e:
     print(f'Error connect to MariaDB: {e}')
@@ -33,7 +40,11 @@ populate.insert_to_fee(cur, conn)
 populate.insert_to_orghasmem(cur, conn)
 populate.insert_to_mempaysfee(cur, conn)
 
+#Views Testing
+# views.view_members_by(cur, conn, '`Gender`')
+
 #Commit changes
 conn.commit()
 
+#Sucess message
 print('Successfully created and populated tables.')

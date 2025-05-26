@@ -33,13 +33,13 @@ def view_members_by(cursor, connection, order, org_id):
                 orgmem.committee AS `Committee`
                 FROM member AS mem JOIN organization_has_member AS orgmem ON 
                 mem.mem_id = orgmem.mem_id
-                WHERE orgmem.org_id = {org_id}
+                WHERE orgmem.org_id = ?
                 ORDER BY {order};
-            """)
-            connection.commit()
+            """, (org_id,))
         except mariadb.Error as e:
             print(f'Error generating view {e}')
         
+        connection.commit()
         #Notify user of view creation success
         print('Successfully created desired view.')
     else:

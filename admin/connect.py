@@ -1,8 +1,8 @@
 import mariadb
 import sys
-import create
-import populate
-import views
+from . import create
+from . import populate
+from . import views
 
 #NOTES:
 # use cur.execute(<query>) to run SQL queries

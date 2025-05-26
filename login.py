@@ -1,4 +1,4 @@
-import connect
+from admin import connect
 import org_login
 
 org_id = None
@@ -18,9 +18,9 @@ def login():
             connect.cur.execute("SELECT * FROM organization WHERE org_username = ? AND org_password = ?", (username, password))
             authenticate1 = connect.cur.fetchone()
             if authenticate1:
-                org_id = authenticate1[1]
+                org_id = authenticate1[0]
                 print("\nWelcome!")
-                org_login.org_login()
+                org_login.org_login(org_id)
 
             else:
                 print('\nInvalid credentials')

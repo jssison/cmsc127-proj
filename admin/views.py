@@ -11,6 +11,9 @@ def view_members_by(cursor, connection, order, org_id):
     #Allowable ordering types
     ordering_types = ['`Role`', '`Status`', '`Gender`', '`Degree Program`', '`Batch year`', '`Committee`']
 
+    if(org_id is None):
+        print('Organization ID is required to create the view.')
+        return
     #Only create a view if ordering type selected is valid
     if(order in ordering_types):
         try:
@@ -30,13 +33,13 @@ def view_members_by(cursor, connection, order, org_id):
                 orgmem.committee AS `Committee`
                 FROM member AS mem JOIN organization_has_member AS orgmem ON 
                 mem.mem_id = orgmem.mem_id
-                WHERE orgmem.org_id = ?
+                WHERE orgmem.org_id = {org_id}
                 ORDER BY {order};
-            """, (org_id,))
+            """)
+            connection.commit()
         except mariadb.Error as e:
             print(f'Error generating view {e}')
         
-        connection.commit()
         #Notify user of view creation success
         print('Successfully created desired view.')
     else:
@@ -47,7 +50,7 @@ def view_members_by(cursor, connection, order, org_id):
 def view_unpaid_members(cursor, connection, org_id, sem, acad_yr):
     try:
         cursor.execute(f"""
-        CREATE VIEW member_with_unpaid_membership_fees AS
+        CREATE OR REPLACE VIEW member_with_unpaid_membership_fees AS
         SELECT 
             m.mem_id AS `Membership ID`,
             CONCAT(m.fname, ' ', IFNULL(m.mname, ''), IF(m.mname IS NOT NULL, ' ', ''), m.lname) AS `Full Name`,
@@ -81,7 +84,7 @@ def view_unpaid_fees(cursor, connection, member):
 #4
 def view_executive_members(cursor, connection, org_id, acad_yr):
     try:
-        cursor.execute(f"""CREATE VIEW executive_committee_members AS
+        cursor.execute(f"""CREATE OR REPLACE VIEW executive_committee_members AS
 	SELECT mem.mem_id AS `Membership ID`,
 	CASE
         WHEN mem.mname IS NOT NULL AND mem.mname != ''

@@ -1,15 +1,13 @@
-import connect
+from admin import connect
 import login
-import views
+from admin import views
 
-def org_login():
+def org_login(org_id):
     print('\n========== VIEW ==========')
     print('[1] Organization Members')
     print('[2] Organization Fees')
     print('[3] Back to Main Menu')
     choice = input('Enter choice: ')
-    
-    org_id = login.org_id
 
     match choice:
         case '1':
@@ -22,11 +20,17 @@ def org_login():
 
             match choice1:
                 case '1':
-                    views.view_members_by(connect.cur, connect.conn, org_id)
+                    views.view_members_by(connect.cur, connect.conn, '`Role`', org_id)
+                    connect.cur.execute("SELECT * FROM members_by_details")
+                    rows = connect.cur.fetchall()
+
+                    #Print the results
+                    for row in rows:
+                        print(row)
 
                 case '2':
                     acad_year = input("Enter academic year (e.g., 2024–2025): ")
-                    views.view_executive_members(connect.cur, connect.conn, org_id, acad_year)
+                    print(views.view_executive_members(connect.cur, connect.conn, org_id, acad_year))
 
                 case '5':
                     org_login()

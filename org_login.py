@@ -2,6 +2,23 @@ from admin import connect
 import login
 from admin import views
 
+#Printing of rows
+def print_rows(rows):
+    for row in rows:
+        print(row)
+
+#Format str to date
+def format_date(date_str):
+    connect.cur.execute("SELECT DATE_FORMAT(STR_TO_DATE(?, '%Y-%m-%d'), '%Y-%m-%d')", (date_str,))
+    result = connect.cur.fetchone()
+    if result:
+        return result[0]
+    return None
+
+#Format str to include backticks
+def format_str(s):
+    return f"`{s.strip().replace('`', '')}`"
+
 def org_login(org_id):
     while True:
         print('\n========== VIEW ==========')
@@ -25,26 +42,36 @@ def org_login(org_id):
                         case '1':
                             rows = views.view_members_by(connect.cur, connect.conn, '`Role`', org_id)
                             #Print the results
-                            for row in rows:
-                                print(row)
+                            print_rows(rows)
 
                         case '2':
                             acad_year = input("Enter academic year (e.g., 2024–2025): ")
                             connect.cur.execute("SELECT * FROM executive_committee_members")
                             rows = views.view_executive_members(connect.cur, connect.conn, org_id, acad_year)
 
-                            for row in rows:
-                                print(row)
+                            print_rows(rows)
 
-                        #case '3':
-
+                        case '3':
+                            given_date = input("Enter date (YYYY-MM-DD): ")
+                            formatted_date = format_date(given_date)
+                            if not formatted_date:
+                                print("Invalid date format. Please use YYYY-MM-DD.")
+                                continue
+                            rows = views.view_alumni(connect.cur, connect.conn, org_id, formatted_date)
+                            print_rows(rows)
 
                         case '4':
-                            role = input("Enter role: ")
+                            role = format_str(input("Enter role: "))
                             rows = views.view_role(connect.cur, connect.conn, role, org_id)
 
-                            for row in rows:
-                                print(row)
+                            print_rows(rows)
+
+                        case '5':
+                            semester = input("Enter semester (e.g., 1st Semester): ")
+                            acad_year = input("Enter academic year (e.g., 2024–2025): ")
+                            rows = views.view_active_inactive(connect.cur, connect.conn, org_id, semester, acad_year)
+                            
+                            print_rows(rows)
 
                         case '6':
                             break
@@ -67,23 +94,30 @@ def org_login(org_id):
                             acad_year = input("Enter academic year (e.g., 2024–2025): ")
                             rows = views.view_unpaid_members(connect.cur, connect.conn, org_id, semester, acad_year)
 
-                            for row in rows:
-                                print(row)
+                            print_rows(rows)
 
                         case '2':
                             semester = input("Enter semester (e.g., 1st Semester): ")
                             acad_year = input("Enter academic year (e.g., 2024–2025): ")
-                            views.view_late_payments(connect.cur, connect.conn, org_id, semester, acad_year)
+                            rows = views.view_late_payments(connect.cur, connect.conn, org_id, semester, acad_year)
 
-                            for row in rows:
-                                print(row)
+                            print_rows(rows)
                         
                         case '3':
                             semester = input("Enter semester (e.g., 1st Semester): ")
-                            views.view_late_payments(connect.cur, connect.conn, org_id, semester, acad_year)
+                            rows = views.view_late_payments(connect.cur, connect.conn, org_id, semester, acad_year)
+                            
+                            print_rows(rows)
+                        
+                        case '4':
+                            given_date = input("Enter date (YYYY-MM-DD): ")
+                            formatted_date = format_date(given_date)
+                            if not formatted_date:
+                                print("Invalid date format. Please use YYYY-MM-DD.")
+                                continue
+                            rows = views.view_total_fees(connect.cur, connect.conn, org_id, formatted_date)
 
-                        #case '4':
-            
+                            print_rows(rows)
 
                         case '5':
                             break

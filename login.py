@@ -1,4 +1,8 @@
 import connect
+import org_login
+
+org_id = None
+mem_id = None
 
 def login():
     print('\n========== LOG IN  AS ==========')
@@ -12,16 +16,19 @@ def login():
     match log_in_as:
         case '1':
             connect.cur.execute("SELECT * FROM organization WHERE org_username = ? AND org_password = ?", (username, password))
-            authenticate = connect.cur.fetchone()
-            if authenticate:
+            authenticate1 = connect.cur.fetchone()
+            if authenticate1:
+                org_id = authenticate1[1]
                 print("\nWelcome!")
+                org_login.org_login()
+
             else:
                 print('\nInvalid credentials')
         
         case '2':
             connect.cur.execute("SELECT * FROM member WHERE mem_uname = ? AND mem_pword = ?", (username, password))
-            authenticate = connect.cur.fetchone()
-            if authenticate:
+            authenticate2 = connect.cur.fetchone()
+            if authenticate2:
                 print("\nWelcome!")
             else:
                 print('\nInvalid credentials')

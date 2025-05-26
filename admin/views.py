@@ -84,26 +84,22 @@ def view_unpaid_fees(cursor, connection, member):
 #4
 def view_executive_members(cursor, connection, org_id, acad_yr):
     try:
-        cursor.execute(f"""CREATE OR REPLACE VIEW executive_committee_members AS
-	SELECT mem.mem_id AS `Membership ID`,
-	CASE
-        WHEN mem.mname IS NOT NULL AND mem.mname != ''
-            THEN CONCAT(mem.fname, ' ', mem.mname, ' ', mem.lname)
-        ELSE CONCAT(mem.fname, ' ', mem.lname)
-    END AS `Full Name`, 
-	org.org_name AS `Organization name`, 
-	orgmem.academic_year AS `Academic year`
-	FROM member AS mem JOIN organization_has_member AS orgmem
-	ON mem.mem_id = orgmem.mem_id 
-	JOIN organization AS org 
-	ON orgmem.org_id = org.org_id
-	WHERE orgmem.committee = 'Executive' AND org.org_id = ? AND orgmem.academic_year = ?;
-    """, (org_id, acad_yr,))
-        
-    except mariadb.Error as e:
-        print(f'Error generating view {e}')
-
-    connection.commit()
+        cursor.execute(f"""
+        CREATE OR REPLACE VIEW executive_committee_members AS
+            SELECT mem.mem_id AS `Membership ID`,
+            CASE
+                WHEN mem.mname IS NOT NULL AND mem.mname != ''
+                    THEN CONCAT(mem.fname, ' ', mem.mname, ' ', mem.lname)
+                ELSE CONCAT(mem.fname, ' ', mem.lname)
+            END AS `Full Name`, 
+            org.org_name AS `Organization name`, 
+            orgmem.academic_year AS `Academic year`
+            FROM member AS mem JOIN organization_has_member AS orgmem
+            ON mem.mem_id = orgmem.mem_id 
+            JOIN organization AS org 
+            ON orgmem.org_id = org.org_id
+            WHERE orgmem.committee = 'Executive' AND org.org_id = {org_id} AND orgmem.academic_year = '{acad_yr}';
+        """)
 
 #5
 def view_role(cursor, connection, role, org):

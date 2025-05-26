@@ -30,11 +30,7 @@ def org_login(org_id):
 
                         case '2':
                             acad_year = input("Enter academic year (e.g., 2024–2025): ")
-                            rows = views.view_executive_members(connect.cur, connect.conn, org_id, acad_year)
-
-                            #Print the results
-                            for row in rows:
-                                print(row)
+                            print(views.view_executive_members(connect.cur, connect.conn, org_id, acad_year))
 
                         case '5':
                             break

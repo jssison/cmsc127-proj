@@ -40,9 +40,8 @@ def view_members_by(cursor, connection, order, org_id):
             print(f'Error generating view {e}')
         
         connection.commit()
-
-        #Fetch and return the results of the view
-        cursor.execute("SELECT * FROM members_by_details")
+        #Notify user of view creation success
+        cursor.execute("SELECT * FROM executive_committee_members")
         return cursor.fetchall()
 
 #2
@@ -70,7 +69,7 @@ def view_unpaid_members(cursor, connection, org_id, sem, acad_yr):
         print(f'Error generating view {e}')
 
     connection.commit()
-    #Fetch and return the results of the view
+    #Notify user of view creation success
     cursor.execute("SELECT * FROM member_with_unpaid_membership_fees")
     return cursor.fetchall()
 
@@ -106,7 +105,6 @@ def view_executive_members(cursor, connection, org_id, acad_yr):
         print(f'Error generating view {e}')
 
     connection.commit()
-    #Fetch and return the results of the view
     cursor.execute("SELECT * FROM executive_committee_members")
     return cursor.fetchall()
 

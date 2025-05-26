@@ -32,7 +32,12 @@ def org_login(org_id):
 
                         case '2':
                             acad_year = input("Enter academic year (e.g., 2024–2025): ")
-                            print(views.view_executive_members(connect.cur, connect.conn, org_id, acad_year))
+                            views.view_executive_members(connect.cur, connect.conn, org_id, acad_year)
+                            connect.cur.execute("SELECT * FROM executive_committee_members")
+                            rows = connect.cur.fetchall()
+
+                    for row in rows:
+                        print(row)
 
                         case '5':
                             break

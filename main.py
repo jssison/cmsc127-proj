@@ -1,7 +1,9 @@
+import login
+
 def menu():
     # Menu Loop
     while True:
-        print('========== MENU ==========')
+        print('\n========== MENU ==========')
         print('[1] Log In')
         print('[2] Exit')
         print('==========================')
@@ -9,7 +11,7 @@ def menu():
 
         match choice:
             case '1':
-                print('Logged In')
+                login.login()
             case '2':
                 print('Terminating program...')
                 break

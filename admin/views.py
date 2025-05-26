@@ -40,11 +40,10 @@ def view_members_by(cursor, connection, order, org_id):
             print(f'Error generating view {e}')
         
         connection.commit()
-        #Notify user of view creation success
-        print('Successfully created desired view.')
-    else:
-        #Else print a message to notify user
-        print('Invalid ordering type.')
+
+        #Fetch and return the results of the view
+        cursor.execute("SELECT * FROM members_by_details")
+        return cursor.fetchall()
 
 #2
 def view_unpaid_members(cursor, connection, org_id, sem, acad_yr):
@@ -71,6 +70,9 @@ def view_unpaid_members(cursor, connection, org_id, sem, acad_yr):
         print(f'Error generating view {e}')
 
     connection.commit()
+    #Fetch and return the results of the view
+    cursor.execute("SELECT * FROM member_with_unpaid_membership_fees")
+    return cursor.fetchall()
 
 #3
 def view_unpaid_fees(cursor, connection, member):
@@ -104,6 +106,9 @@ def view_executive_members(cursor, connection, org_id, acad_yr):
         print(f'Error generating view {e}')
 
     connection.commit()
+    #Fetch and return the results of the view
+    cursor.execute("SELECT * FROM executive_committee_members")
+    return cursor.fetchall()
 
 #5
 def view_role(cursor, connection, role, org):

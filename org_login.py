@@ -22,9 +22,7 @@ def org_login(org_id):
 
                     match choice1:
                         case '1':
-                            views.view_members_by(connect.cur, connect.conn, '`Role`', org_id)
-                            connect.cur.execute("SELECT * FROM members_by_details")
-                            rows = connect.cur.fetchall()
+                            rows = views.view_members_by(connect.cur, connect.conn, '`Role`', org_id)
 
                             #Print the results
                             for row in rows:
@@ -32,7 +30,11 @@ def org_login(org_id):
 
                         case '2':
                             acad_year = input("Enter academic year (e.g., 2024–2025): ")
-                            print(views.view_executive_members(connect.cur, connect.conn, org_id, acad_year))
+                            rows = views.view_executive_members(connect.cur, connect.conn, org_id, acad_year)
+
+                            #Print the results
+                            for row in rows:
+                                print(row)
 
                         case '5':
                             break
@@ -66,7 +68,7 @@ def org_login(org_id):
                             print("Invalid choice.")
 
             case '3':
-                login.login()
+                break
 
             case _:
                 print("Invalid choice.")

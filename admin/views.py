@@ -41,7 +41,7 @@ def view_members_by(cursor, connection, order, org_id):
         
         connection.commit()
         #Notify user of view creation success
-        cursor.execute("SELECT * FROM executive_committee_members")
+        cursor.execute("SELECT * FROM members_by_details")
         return cursor.fetchall()
 
 #2

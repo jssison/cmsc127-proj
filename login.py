@@ -28,7 +28,6 @@ def login():
                     org_id = authenticate1[0]
                     print("\nWelcome!")
                     org_login.org_login(org_id)
-                    break
                 else:
                     print('\nInvalid credentials')
             
@@ -42,6 +41,7 @@ def login():
                     print('\nInvalid credentials')
             
             case '3':
+                print('\nExiting...')
                 break
 
             case _:

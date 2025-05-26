@@ -76,7 +76,7 @@ def view_unpaid_members(cursor, connection, org_id, sem, acad_yr):
 def view_unpaid_fees(cursor, connection, member):
     try:
         cursor.execute(f"""
-        CREATE VIEW unpaid_member_fees AS	
+        CREATE OR REPLACE VIEW unpaid_member_fees AS	
             SELECT fee.fee_refnum AS `Fee reference number`, 
                 fee.category AS `Category`, 
                 fee.due_date AS `Due date`, 
@@ -132,7 +132,7 @@ def view_executive_members(cursor, connection, org_id, acad_yr):
 def view_role(cursor, connection, role, org_id):
     try:
         cursor.execute(f"""
-        CREATE VIEW presidents AS
+        CREATE OR REPLACE VIEW presidents AS
             SELECT mem.mem_id AS `Membership ID`,
             CASE
             WHEN mem.mname IS NOT NULL AND mem.mname != ''
@@ -161,7 +161,7 @@ def view_role(cursor, connection, role, org_id):
 def view_late_payments(cursor, connection, org_id, sem, acad_yr):
     try:
         cursor.execute(f"""
-        CREATE VIEW late_payments_view AS
+        CREATE OR REPLACE VIEW late_payments_view AS
             SELECT 
                 m.mem_id AS `Membership ID`,
                 CONCAT(m.fname, ' ', IFNULL(m.mname, ''), IF(m.mname IS NOT NULL, ' ', ''), m.lname) AS `Full Name`,
@@ -195,7 +195,7 @@ def view_late_payments(cursor, connection, org_id, sem, acad_yr):
 def view_percentage(cursor, connection, org, num_of_sems):
     try:
         cursor.execute(f"""
-        CREATE VIEW active_vs_inactive_percentage AS 
+        CREATE OR REPLACE VIEW active_vs_inactive_percentage AS 
         SELECT academic_year,
             semester,
             COUNT(*) AS total_members,
@@ -220,7 +220,7 @@ def view_percentage(cursor, connection, org, num_of_sems):
 def view_alumni(cursor, connection, org, given_date):
     try:
         cursor.execute(f"""
-        CREATE VIEW alumni_members AS
+        CREATE OR REPLACE VIEW alumni_members AS
             SELECT mem.mem_id AS `Membership ID`,
             CASE WHEN 
                 mem.mname IS NOT NULL AND mem.mname != ''
@@ -247,7 +247,7 @@ def view_alumni(cursor, connection, org, given_date):
 def view_total_fees(cursor, connection, org, given_date):
     try:
         cursor.execute(f"""
-        CREATE VIEW total_unpaid AS
+        CREATE OR REPLACE VIEW total_unpaid AS
             SELECT o.org_name,
                 Total Paid Amount (before or on today)
                 COALESCE(SUM(
@@ -275,7 +275,7 @@ def view_total_fees(cursor, connection, org, given_date):
 def view_unpaid(cursor, connection, sem, acad_yr):
     try:
         cursor.execute(f"""
-        CREATE VIEW highest_debt 
+        CREATE OR REPLACE VIEW highest_debt 
             SELECT m.mem_id,
                 m.fname,
                 m.lname,

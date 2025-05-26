@@ -1,5 +1,7 @@
 import mariadb
 
+#TODO: Debug views
+
 # View members by the specified ordering type
 def view_members_by(cursor, connection, order, org_id):
     ordering_types = ['`Role`', '`Status`', '`Gender`', '`Degree Program`', '`Batch year`', '`Committee`']
@@ -192,7 +194,7 @@ def view_percentage(cursor, connection, org_id, num_of_sems):
         return []
 
 # View alumni as of a given date
-def view_alumni(cursor, connection, org_id):
+def view_alumni(cursor, connection, org_id, given_date):
     try:
         cursor.execute(f"""
             CREATE OR REPLACE VIEW alumni_members AS
@@ -215,7 +217,7 @@ def view_alumni(cursor, connection, org_id):
         return []
 
 # View total unpaid and paid fees
-def view_total_fees(cursor, connection, org_id):
+def view_total_fees(cursor, connection, org_id, given_date):
     try:
         cursor.execute(f"""
             CREATE OR REPLACE VIEW total_unpaid AS
@@ -236,7 +238,7 @@ def view_total_fees(cursor, connection, org_id):
         return []
 
 # View member(s) with highest debt
-def view_unpaid(cursor, connection, org_id, sem, acad_yr):
+def view_unpaid(cursor, connection, org_id, sem):
     try:
         cursor.execute(f"""
             CREATE OR REPLACE VIEW highest_debt AS
@@ -246,7 +248,7 @@ def view_unpaid(cursor, connection, org_id, sem, acad_yr):
             FROM member m
             JOIN member_pays_fee mpf ON m.mem_id = mpf.mem_id
             JOIN fee f ON mpf.fee_refnum = f.fee_refnum
-            WHERE f.org_id = '{org_id}' AND mpf.semester = '{sem}' AND mpf.academic_year = '{acad_yr}'
+            WHERE f.org_id = '{org_id}' AND mpf.semester = '{sem}'
             GROUP BY m.mem_id, m.fname, m.mname, m.lname
             ORDER BY unpaid_amount DESC;
         """)

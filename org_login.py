@@ -36,8 +36,8 @@ def org_login(org_id):
                             connect.cur.execute("SELECT * FROM executive_committee_members")
                             rows = connect.cur.fetchall()
 
-                    for row in rows:
-                        print(row)
+                            for row in rows:
+                                print(row)
 
                         case '5':
                             break

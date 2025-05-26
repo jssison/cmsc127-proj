@@ -61,15 +61,14 @@ def org_login(org_id):
                             print_rows(rows)
 
                         case '4':
-                            role = format_str(input("Enter role: "))
+                            role = input("Enter role: ")
                             rows = views.view_role(connect.cur, connect.conn, role, org_id)
 
                             print_rows(rows)
 
                         case '5':
-                            semester = input("Enter semester (e.g., 1st Semester): ")
-                            acad_year = input("Enter academic year (e.g., 2024–2025): ")
-                            rows = views.view_active_inactive(connect.cur, connect.conn, org_id, semester, acad_year)
+                            num_of_sems = int(input("Enter number of semesters: "))
+                            rows = views.view_percentage(connect.cur, connect.conn, org_id, num_of_sems)
                             
                             print_rows(rows)
 

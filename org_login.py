@@ -40,7 +40,9 @@ def org_login(org_id):
 
                     match choice1:
                         case '1':
-                            rows = views.view_members_by(connect.cur, connect.conn, '`Role`', org_id)
+                            order_by = input("Enter order by (e.g., Role, Gender, Status, Degree Program, Batch year, Committee): ")
+                            formatted_order_by = format_str(order_by)
+                            rows = views.view_members_by(connect.cur, connect.conn, formatted_order_by, org_id)
                             #Print the results
                             print_rows(rows)
 

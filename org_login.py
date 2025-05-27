@@ -79,15 +79,15 @@ def open_members_menu(main_menu_win, org_id):
         """Adjust input fields based on selected option."""
         clear_inputs()
         opt = selected_option.get()
-        if opt == "members":
+        if opt == "members": # viewing all the members of the organization in the database
             create_input("Order by (e.g., Role, Gender, Status, Degree Program, Batch year, Committee):", "order_by")
-        elif opt == "executive":
+        elif opt == "executive": # viewing of executive positions in given acad year
             create_input("Academic year (e.g., 2024–2025):", "acad_year")
-        elif opt == "alumni":
+        elif opt == "alumni":  # viewing of list of alumni as of given date
             create_input("Date (YYYY-MM-DD):", "date")
-        elif opt == "role":
+        elif opt == "role": # viewing of past and present members who was in the said position
             create_input("Role:", "role")
-        elif opt == "percentage":
+        elif opt == "percentage": # percentage of active vs. inactive members (members wit other status apart from the two were counted for the total)
             create_input("Number of semesters:", "num_semesters")
 
     selected_option.trace_add("write", update_inputs)
@@ -115,7 +115,7 @@ def open_members_menu(main_menu_win, org_id):
                     messagebox.showerror("Input Error", "Order by is required.")
                     return
                 formatted_order_by = format_str(order_by)
-                rows = views.view_members_by(connect.cur, connect.conn, formatted_order_by, org_id)
+                rows = views.view_members_by(connect.cur, connect.conn, formatted_order_by, org_id) # calls the created view for this option
                 headers = ["Membership ID", "Full Name", "Role", "Status", "Gender", "Degree Program", "Batch year", "Committee"]
                 set_tree_columns(tree, headers)
                 print_rows_treeview(tree, rows)
@@ -125,7 +125,7 @@ def open_members_menu(main_menu_win, org_id):
                 if not acad_year:
                     messagebox.showerror("Input Error", "Academic year is required.")
                     return
-                rows = views.view_executive_members(connect.cur, connect.conn, org_id, acad_year)
+                rows = views.view_executive_members(connect.cur, connect.conn, org_id, acad_year) # calls the created view for this option
                 headers = ["Membership ID", "Full Name", "Organization", "Academic Year"]
                 set_tree_columns(tree, headers)
                 print_rows_treeview(tree, rows)
@@ -136,7 +136,7 @@ def open_members_menu(main_menu_win, org_id):
                 if not formatted_date:
                     messagebox.showerror("Input Error", "Invalid date format. Use YYYY-MM-DD.")
                     return
-                rows = views.view_alumni(connect.cur, connect.conn, org_id, formatted_date)
+                rows = views.view_alumni(connect.cur, connect.conn, org_id, formatted_date) # calls the created view for this option
                 headers = ["Membership ID", "Full Name", "Organization"]
                 set_tree_columns(tree, headers)
                 print_rows_treeview(tree, rows)
@@ -146,7 +146,7 @@ def open_members_menu(main_menu_win, org_id):
                 if not role:
                     messagebox.showerror("Input Error", "Role is required.")
                     return
-                rows = views.view_role(connect.cur, connect.conn, role, org_id)
+                rows = views.view_role(connect.cur, connect.conn, role, org_id) # calls the created view for this option
                 headers = ["Membership ID", "Full Name", "Role", "Organization", "Academic Year"]
                 set_tree_columns(tree, headers)
                 print_rows_treeview(tree, rows)
@@ -157,7 +157,7 @@ def open_members_menu(main_menu_win, org_id):
                 except:
                     messagebox.showerror("Input Error", "Number of semesters must be an integer.")
                     return
-                rows = views.view_percentage(connect.cur, connect.conn, org_id, num_semesters)
+                rows = views.view_percentage(connect.cur, connect.conn, org_id, num_semesters) # calls the created view for this option
                 headers = ["Total Members", "Active Count", "Inactive Count", "Active Percentage", "Inactive Percentage"]
                 set_tree_columns(tree, headers)
                 print_rows_treeview(tree, rows)
@@ -243,45 +243,45 @@ def open_fees_menu(main_menu_win, org_id):
     def run_query():
         opt = selected_option.get()
         try:
-            if opt == "unpaid":
+            if opt == "unpaid": # list of members with unpaid fees or dues
                 semester = input_vars["semester"].get()
                 acad_year = input_vars["acad_year"].get()
                 if not semester or not acad_year:
                     messagebox.showerror("Input Error", "Semester and academic year are required.")
                     return
-                rows = views.view_unpaid_members(connect.cur, connect.conn, org_id, semester, acad_year)
+                rows = views.view_unpaid_members(connect.cur, connect.conn, org_id, semester, acad_year) # calls the created view for this option
                 headers = ["Membership ID", "Full Name", "Degree Program", "Gender", "Organization ID", "Academic Year", "Semester"]
                 set_tree_columns(tree, headers)
                 print_rows_treeview(tree, rows)
 
-            elif opt == "late":
+            elif opt == "late": # list of members with late payments (date of payments past due dates)
                 semester = input_vars["semester"].get()
                 acad_year = input_vars["acad_year"].get()
                 if not semester or not acad_year:
                     messagebox.showerror("Input Error", "Semester and academic year are required.")
                     return
-                rows = views.view_late_payments(connect.cur, connect.conn, org_id, semester, acad_year)
+                rows = views.view_late_payments(connect.cur, connect.conn, org_id, semester, acad_year) # calls the created view for this option
                 headers = ["Membership ID", "Full Name", "Degree Program", "Gender", "Organization ID", "Academic Year", "Semester", "Fee Reference Number", "Due Date", "Date of Payment", "Status"]
                 set_tree_columns(tree, headers)
                 print_rows_treeview(tree, rows)
 
-            elif opt == "highest":
+            elif opt == "highest": # member/s with the highest debt
                 semester = input_vars["semester"].get()
                 if not semester:
                     messagebox.showerror("Input Error", "Semester is required.")
                     return
-                rows = views.view_unpaid(connect.cur, connect.conn, org_id, semester)
+                rows = views.view_unpaid(connect.cur, connect.conn, org_id, semester) # calls the created view for this option
                 headers = ["Membership ID", "Full Name", "Unpaid Amount"]
                 set_tree_columns(tree, headers)
                 print_rows_treeview(tree, rows)
 
-            elif opt == "total":
+            elif opt == "total": # total paid and unpaid amount as of a given date
                 date_str = input_vars["date"].get()
                 formatted_date = format_date(date_str)
                 if not formatted_date:
                     messagebox.showerror("Input Error", "Invalid date format. Use YYYY-MM-DD.")
                     return
-                rows = views.view_total_fees(connect.cur, connect.conn, org_id, formatted_date)
+                rows = views.view_total_fees(connect.cur, connect.conn, org_id, formatted_date) # calls the created view for this option
                 headers = ["Total Unpaid", "Total Paid"]
                 set_tree_columns(tree, headers)
                 print_rows_treeview(tree, rows)

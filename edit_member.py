@@ -265,6 +265,54 @@ def edit_org_membership(org_id, mem_id, parent_window):
     back_btn.pack()
 
 def add_mem_fees(org_id, parent_window):
+    def show_payment_window(fee_refnum, mem_id):
+        clear_frame(parent_window)
+        parent_window.config(bg=WHITE)
+
+        title = tk.Label(parent_window, text="Add Member Payment", font=("Helvetica", 16, "bold"))
+        style_label(title)
+        title.pack(pady=10)
+
+        labels = ["Academic Year:", "Semester:", "Date of Payment (YYYY-MM-DD):", "Payment Status:"]
+        entries = []
+        for text in labels:
+            lbl = tk.Label(parent_window, text=text)
+            style_label(lbl)
+            lbl.pack()
+            ent = tk.Entry(parent_window)
+            style_entry(ent)
+            ent.pack()
+            entries.append(ent)
+
+        def save_payment():
+            acad_yr = entries[0].get().strip()
+            sem = entries[1].get().strip()
+            payment_date = entries[2].get().strip()
+            status = entries[3].get().strip()
+
+            if not acad_yr or not sem or not payment_date or not status:
+                messagebox.showerror("Error", "Please fill all fields.")
+                return
+
+            try:
+                connect.cur.execute("""
+                    INSERT INTO member_pays_fee VALUES (?, ?, ?, ?, ?, ?)
+                """, (mem_id, fee_refnum, acad_yr, sem, payment_date, status))
+                connect.conn.commit()
+                messagebox.showinfo("Success", "Fee and payment added successfully.")
+                edit_member_menu(org_id, parent_window)
+            except Exception as e:
+                connect.cur.execute("""
+                    DELETE FROM fee WHERE fee_refnum = ?
+                    """, (fee_refnum))
+                connect.conn.commit()
+                messagebox.showerror("Error", f"Database error: {e}")
+
+        save_btn = tk.Button(parent_window, text="Save Payment", command=save_payment)
+        style_button(save_btn)
+        save_btn.pack(pady=15)
+
+    # Initial fee entry form
     clear_frame(parent_window)
     parent_window.config(bg=WHITE)
 
@@ -272,7 +320,7 @@ def add_mem_fees(org_id, parent_window):
     style_label(title)
     title.pack(pady=10)
 
-    labels = ["Member ID:", "Fee Reference Number:", "Payment Date (YYYY-MM-DD):"]
+    labels = ["Member ID:", "Category:", "Due Date (YYYY-MM-DD):", "Amount:"]
     entries = []
     for text in labels:
         lbl = tk.Label(parent_window, text=text)
@@ -285,10 +333,11 @@ def add_mem_fees(org_id, parent_window):
 
     def save_fee():
         mem_id = entries[0].get().strip()
-        fee_refnum = entries[1].get().strip()
-        payment_date = entries[2].get().strip()
+        category = entries[1].get().strip()
+        due_date = entries[2].get().strip()
+        amount = entries[3].get().strip()
 
-        if not mem_id or not fee_refnum or not payment_date:
+        if not mem_id or not category or not due_date or not amount:
             messagebox.showerror("Error", "Please fill all fields.")
             return
 
@@ -299,11 +348,18 @@ def add_mem_fees(org_id, parent_window):
 
         try:
             connect.cur.execute("""
-                INSERT INTO member_pays_fee (mem_id, fee_refnum, date_of_payment) VALUES (?, ?, ?)
-            """, (mem_id, fee_refnum, payment_date))
+                INSERT INTO fee (category, due_date, amount, org_id)
+                VALUES (?, ?, ?, ?)
+            """, (category, due_date, amount, org_id))
             connect.conn.commit()
-            messagebox.showinfo("Success", "Fee added successfully.")
-            edit_member_menu(org_id, parent_window)
+
+            connect.cur.execute("SELECT LAST_INSERT_ID()")
+            fee_refnum = connect.cur.fetchone()
+            if fee_refnum:
+                fee_refnum = fee_refnum[0]
+                show_payment_window(fee_refnum, mem_id)
+            else:
+                messagebox.showerror("Error", "Could not retrieve fee reference number.")
         except Exception as e:
             messagebox.showerror("Error", f"Database error: {e}")
 
@@ -314,6 +370,7 @@ def add_mem_fees(org_id, parent_window):
     back_btn = tk.Button(parent_window, text="Back", command=lambda: edit_member_menu(org_id, parent_window))
     style_button(back_btn)
     back_btn.pack()
+
 
 #########################################
 
@@ -382,7 +439,7 @@ def edit_fee_detail(org_id, mem_id, fee_refnum, parent_window):
     style_label(lbl)
     lbl.pack()
     payment_date_entry = tk.Entry(parent_window)
-    payment_date_entry.insert(0, fee[4])
+    payment_date_entry.insert(0, str(fee[4]) if fee[4] is not None else "")
     style_entry(payment_date_entry)
     payment_date_entry.pack()
 

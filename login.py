@@ -3,6 +3,7 @@ import org_login
 import member_login
 import remove_member
 import add_member
+import edit_member
 
 org_id = None
 mem_id = None
@@ -35,7 +36,8 @@ def login():
                         add_member.add_member(org_id)
                     case '2':
                         remove_member.remove_member(org_id)
-                    #case '3':
+                    case '3':
+                        edit_member.edit_member_menu(org_id)
                     case '4':
                         org_login.org_login(org_id)
                     case _:

@@ -315,21 +315,27 @@ def add_mem_fees(org_id, parent_window):
     style_button(back_btn)
     back_btn.pack()
 
+#########################################
+
 def edit_mem_fees(org_id, mem_id, parent_window):
     clear_frame(parent_window)
     parent_window.config(bg=WHITE)
 
+    # Get member fees
     connect.cur.execute("""
-        SELECT mpf.fee_refnum, mpf.date_of_payment, f.fee_name 
+        SELECT mpf.fee_refnum, mpf.date_of_payment, f.category
         FROM member_pays_fee mpf JOIN fee f ON mpf.fee_refnum = f.fee_refnum
         WHERE mpf.mem_id = ? AND f.org_id = ?
     """, (mem_id, org_id))
     fees = connect.cur.fetchall()
+
+    #If member has no fees
     if not fees:
         messagebox.showinfo("Info", "No fees found for this member.")
         edit_member_menu(org_id, parent_window)
         return
 
+    #Display fees
     title = tk.Label(parent_window, text=f"Fees for Member {mem_id}", font=("Helvetica", 16, "bold"))
     style_label(title)
     title.pack(pady=10)
@@ -342,6 +348,7 @@ def edit_mem_fees(org_id, mem_id, parent_window):
         lbl = tk.Label(frame, text=fee_str, bg=WHITE, fg=MAROON_COLOR)
         lbl.pack(side="left")
 
+    #Allow user to edit fee details
         edit_btn = tk.Button(frame, text="Edit", command=lambda ref=fee_refnum: edit_fee_detail(org_id, mem_id, ref, parent_window))
         style_button(edit_btn)
         edit_btn.pack(side="right")
@@ -354,15 +361,19 @@ def edit_fee_detail(org_id, mem_id, fee_refnum, parent_window):
     clear_frame(parent_window)
     parent_window.config(bg=WHITE)
 
+    #get specific fee
     connect.cur.execute("""
         SELECT * FROM member_pays_fee WHERE mem_id = ? AND fee_refnum = ?
     """, (mem_id, fee_refnum))
     fee = connect.cur.fetchone()
+
+    #If fee not found
     if not fee:
         messagebox.showerror("Error", "Fee record not found.")
         edit_mem_fees(org_id, mem_id, parent_window)
         return
 
+    #Allow editing
     title = tk.Label(parent_window, text=f"Edit Fee {fee_refnum} for Member {mem_id}", font=("Helvetica", 16, "bold"))
     style_label(title)
     title.pack(pady=10)
@@ -371,18 +382,28 @@ def edit_fee_detail(org_id, mem_id, fee_refnum, parent_window):
     style_label(lbl)
     lbl.pack()
     payment_date_entry = tk.Entry(parent_window)
-    payment_date_entry.insert(0, fee[2])
+    payment_date_entry.insert(0, fee[4])
     style_entry(payment_date_entry)
     payment_date_entry.pack()
 
+    lbl1 = tk.Label(parent_window, text="Payment Status (Paid/Not Paid):")
+    style_label(lbl1)
+    lbl1.pack()
+    payment_status_entry = tk.Entry(parent_window)
+    payment_status_entry.insert(0, fee[5])
+    style_entry(payment_status_entry)
+    payment_status_entry.pack()    
+
     def save_fee_changes():
         new_date = payment_date_entry.get().strip()
-        if not new_date:
-            messagebox.showerror("Error", "Payment date cannot be empty.")
+        new_status = payment_status_entry.get().strip()
+
+        if not new_date or not new_status:
+            messagebox.showerror("Error", "Fields cannot be empty.")
             return
         connect.cur.execute("""
-            UPDATE member_pays_fee SET date_of_payment=? WHERE mem_id=? AND fee_refnum=?
-        """, (new_date, mem_id, fee_refnum))
+            UPDATE member_pays_fee SET date_of_payment=?, payment_status = ? WHERE mem_id=? AND fee_refnum=?
+        """, (new_date, new_status, mem_id, fee_refnum))
         connect.conn.commit()
         messagebox.showinfo("Success", "Fee updated successfully.")
         edit_mem_fees(org_id, mem_id, parent_window)

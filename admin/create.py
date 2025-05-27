@@ -1,5 +1,6 @@
 import mariadb
 
+# creating the entity organization with the following attributes and constraints
 def create_org(cursor, connection):
     try:
         cursor.execute("""
@@ -18,6 +19,7 @@ def create_org(cursor, connection):
 
     connection.commit()
 
+# creating the entity member with the following attributes and constraints
 def create_mem(cursor, connection):
     try:
         cursor.execute( """
@@ -40,6 +42,7 @@ def create_mem(cursor, connection):
 
     connection.commit()
 
+# creating the entity fee with the following attributes and constraints
 def create_fee(cursor, connection):
     try:
         cursor.execute("""
@@ -59,6 +62,7 @@ def create_fee(cursor, connection):
 
     connection.commit()
 
+# creating the organization_has_member with the following relationship attributes and constraints
 def create_orghasmem(cursor, connection):
     try:
         cursor.execute("""
@@ -84,6 +88,7 @@ def create_orghasmem(cursor, connection):
 
     connection.commit()
 
+# creating the organization_has_member with the following relationship attributes and constraints
 def create_mempaysfee(cursor, connection):
     try:
         cursor.execute("""

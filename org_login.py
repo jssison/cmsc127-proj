@@ -2,10 +2,13 @@ from admin import connect
 import login
 from admin import views
 
+
+from tabulate import tabulate
+
 #Printing of rows
-def print_rows(rows):
-    for row in rows:
-        print(row)
+#
+#    for row in rows:
+#       print(row)
 
 #Format str to date
 def format_date(date_str):
@@ -19,6 +22,14 @@ def format_date(date_str):
 def format_str(s):
     return f"`{s.strip().replace('`', '')}`"
 
+def print_rows(rows):
+    if not rows:
+        print("No data found.")
+        return
+    
+    headers = [desc[0] for desc in connect.cur.description]  #getting the column names from the views
+    print(tabulate(rows, headers=headers, tablefmt="heavy_grid")) #Reference: https://pypi.org/project/tabulate/
+
 def org_login(org_id):
     while True:
         print('\n========== VIEW ==========')
@@ -30,7 +41,8 @@ def org_login(org_id):
         match choice:
             case '1':
                 while True:
-                    print('\n[1] Members of the Organization')
+                    print('\n========== VIEW MEMBERS ==========')
+                    print('[1] Members of the Organization')
                     print('[2] Executive Members')
                     print('[3] Alumni Members')
                     print('[4] List of Past and Present in Position')
@@ -48,7 +60,6 @@ def org_login(org_id):
 
                         case '2':
                             acad_year = input("Enter academic year (e.g., 2024–2025): ")
-                            connect.cur.execute("SELECT * FROM executive_committee_members")
                             rows = views.view_executive_members(connect.cur, connect.conn, org_id, acad_year)
 
                             print_rows(rows)
@@ -60,7 +71,11 @@ def org_login(org_id):
                                 print("Invalid date format. Please use YYYY-MM-DD.")
                                 continue
                             rows = views.view_alumni(connect.cur, connect.conn, org_id, formatted_date)
-                            print_rows(rows)
+                            
+                            if not rows:
+                                    print(f"\nNo alumni as of {given_date}.")
+                            else:
+                                    print_rows(rows)
 
                         case '4':
                             role = input("Enter role: ")
@@ -82,7 +97,8 @@ def org_login(org_id):
             
             case '2':
                 while True:
-                    print('\n[1] List of Unpaid Members')
+                    print('\n========== VIEW FEES ==========')
+                    print('[1] List of Unpaid Members')
                     print('[2] Late Payments by all Members')
                     print('[3] Highest Member/s with Unpaid Fees')
                     print('[4] Total Unpaid and Paid Fees')
@@ -95,20 +111,29 @@ def org_login(org_id):
                             acad_year = input("Enter academic year (e.g., 2024–2025): ")
                             rows = views.view_unpaid_members(connect.cur, connect.conn, org_id, semester, acad_year)
 
-                            print_rows(rows)
+                            if not rows:
+                                    print(f"\nNo unpaid members for {semester}, {acad_year}.")
+                            else:
+                                    print_rows(rows)
 
                         case '2':
                             semester = input("Enter semester (e.g., 1st Semester): ")
                             acad_year = input("Enter academic year (e.g., 2024–2025): ")
                             rows = views.view_late_payments(connect.cur, connect.conn, org_id, semester, acad_year)
 
-                            print_rows(rows)
+                            if not rows:
+                                    print(f"\nNo late payments made by members for {semester}, {acad_year}.")
+                            else:
+                                    print_rows(rows)
                         
                         case '3':
                             semester = input("Enter semester (e.g., 1st Semester): ")
                             rows = views.view_late_payments(connect.cur, connect.conn, org_id, semester, acad_year)
                             
-                            print_rows(rows)
+                            if not rows:
+                                    print(f"\nNo members have debt for {semester}, {acad_year}.")
+                            else:
+                                    print_rows(rows)
                         
                         case '4':
                             given_date = input("Enter date (YYYY-MM-DD): ")

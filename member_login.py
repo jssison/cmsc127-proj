@@ -3,13 +3,13 @@ from tkinter import ttk, messagebox
 from admin import connect
 
 def member_login_gui(mem_id, root_window=None):
-    """
-    Displays a GUI for the logged-in member, showing personal details and unpaid fees.
 
-    Parameters:
-    - mem_id: The ID of the member who logged in.
-    - root_window: The root Tkinter window to return to (if applicable).
-    """
+    # Displays a GUI for the logged-in member, showing personal details and unpaid fees.
+
+    # Parameters:
+    # - mem_id: The ID of the member who logged in.
+    # - root_window: The root Tkinter window to return to (if applicable).
+
     # Create a new Toplevel window for the member dashboard
     member_window = tk.Toplevel()
     member_window.title("Member Dashboard")

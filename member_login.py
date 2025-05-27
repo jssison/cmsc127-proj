@@ -143,4 +143,4 @@ def member_login_gui(mem_id, root_window=None):
             root_window.deiconify()
         member_window.destroy()
 
-    tk.Button(member_window, text="Back", command=go_back, bg=maroon, fg=maroon, font=label_font).pack(pady=15)
+    tk.Button(member_window, text="Back", command=go_back, bg=white, fg=maroon, font=label_font).pack(pady=15)

@@ -11,7 +11,7 @@ def add_member(org_id):
         fname = input("First name: ")
         mname = input("Middle name (press Enter to skip): ")
         lname = input("Last name: ")
-        degprog = input("Degree Program: ")
+        degprog = input("Degree Program (e.g BSSTAT): ")
         gender = input("Gender (M/F): ").upper()
 
         # Insert into member
@@ -22,7 +22,7 @@ def add_member(org_id):
 
         # Org member details
         academic_year = input("Academic Year (e.g., 2024-2025): ")
-        semester = input("Semester: ")
+        semester = input("Semester (e.g 1st Semester): ")
         committee = input("Committee: ")
         org_role = input("Role: ")
         batch_year = input("Batch Year: ")

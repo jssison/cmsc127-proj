@@ -299,7 +299,7 @@ def add_mem_fees(org_id, parent_window):
 
         try:
             connect.cur.execute("""
-                INSERT INTO member_pays_fee (mem_id, fee_refnum, payment_date) VALUES (?, ?, ?)
+                INSERT INTO member_pays_fee (mem_id, fee_refnum, date_of_payment) VALUES (?, ?, ?)
             """, (mem_id, fee_refnum, payment_date))
             connect.conn.commit()
             messagebox.showinfo("Success", "Fee added successfully.")
@@ -320,7 +320,7 @@ def edit_mem_fees(org_id, mem_id, parent_window):
     parent_window.config(bg=WHITE)
 
     connect.cur.execute("""
-        SELECT mpf.fee_refnum, mpf.payment_date, f.fee_name 
+        SELECT mpf.fee_refnum, mpf.date_of_payment, f.fee_name 
         FROM member_pays_fee mpf JOIN fee f ON mpf.fee_refnum = f.fee_refnum
         WHERE mpf.mem_id = ? AND f.org_id = ?
     """, (mem_id, org_id))
@@ -381,7 +381,7 @@ def edit_fee_detail(org_id, mem_id, fee_refnum, parent_window):
             messagebox.showerror("Error", "Payment date cannot be empty.")
             return
         connect.cur.execute("""
-            UPDATE member_pays_fee SET payment_date=? WHERE mem_id=? AND fee_refnum=?
+            UPDATE member_pays_fee SET date_of_payment=? WHERE mem_id=? AND fee_refnum=?
         """, (new_date, mem_id, fee_refnum))
         connect.conn.commit()
         messagebox.showinfo("Success", "Fee updated successfully.")

@@ -50,8 +50,9 @@ def show_org_dashboard(org_id_param):
             root.withdraw()
             remove_member.remove_member(org_id, parent_window=root)
         elif choice == 3:
-            root.withdraw()
+            #root.withdraw()
             edit_member.edit_member_menu(org_id, parent_window=root)
+            root.bind("<<BackToDashboard>>", lambda e: show_org_dashboard(org_id))
         elif choice == 4:
             root.withdraw()
             # Open org main menu as Toplevel and pass root so it can deiconify root on close

@@ -83,7 +83,7 @@ def insert_to_orghasmem(cursor, connection):
             (2222, 2022567, '2023-2024', 'Membership', '2nd Semester', 'Member', '2022', 'C', 'Suspended'),
             (1111, 2022538, '2024-2025', 'Scholastic', '1st Semester', 'Member', '2023', 'Range', 'Inactive'),
             (1111, 2023474, '2024-2025', 'Executive', '1st Semester', 'Treasurer', '2023', 'Range', 'Active'),
-            (1111, 2021111, '2023-2024', 'Executive', '2nd Semester', 'President', '2023', 'Z', 'Alumni'),
+            (1111, 2021111, '2024-2025', 'Executive', '2nd Semester', 'President', '2023', 'Z', 'Alumni'),
             (1111, 2021221, '2024-2025', 'Membership', '2nd Semester', 'Member', '2022', 'Bivariate', 'Alumni'),
             (2222, 2021234, '2023-2024', 'Membership', '2nd Semester', 'Member', '2022', 'C', 'Inactive'),
             (2222, 2022777, '2024-2025', 'Finance', '1st Semester', 'Member', '2022', 'Python', 'Expelled'),

@@ -24,24 +24,25 @@ def login():
             if authenticate1:
                 org_id = authenticate1[0]
                 print("\nWelcome!")
-                print("========== What do you want to do? ==========")
-                print("[1] Add Members")
-                print("[2] Remove Members")
-                print("[3] Edit Members")
-                print("[4] View Members and Fees")
-                answer = input("Enter choice: ")
+                while True:
+                    print("\n========== What do you want to do? ==========")
+                    print("[1] Add Members")
+                    print("[2] Remove Members")
+                    print("[3] Edit Members")
+                    print("[4] View Members and Fees")
+                    answer = input("Enter choice: ")
 
-                match answer:
-                    case '1':
-                        add_member.add_member(org_id)
-                    case '2':
-                        remove_member.remove_member(org_id)
-                    case '3':
-                        edit_member.edit_member_menu(org_id)
-                    case '4':
-                        org_login.org_login(org_id)
-                    case _:
-                        'Invalid choice.'
+                    match answer:
+                        case '1':
+                            add_member.add_member(org_id)
+                        case '2':
+                            remove_member.remove_member(org_id)
+                        case '3':
+                            edit_member.edit_member_menu(org_id)
+                        case '4':
+                            org_login.org_login(org_id)
+                        case _:
+                            print('Invalid choice.')
 
             else:
                 print('\nInvalid credentials')

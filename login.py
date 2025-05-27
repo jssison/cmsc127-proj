@@ -29,20 +29,20 @@ FONT_ENTRY = ("Helvetica", 11)
 FONT_BUTTON = ("Helvetica", 11, "bold")
 
 def clear_screen():
-    """
-    Clears all widgets from the main window.
-    Used when switching between screens (login, dashboard, etc.).
-    """
+   
+    #Clears all widgets from the main window.
+    #Used when switching between screens (login, dashboard, etc.).
+
     for widget in root.winfo_children():
         widget.pack_forget()
 
 def show_org_dashboard(org_id_param):
-    """
-    Displays the dashboard for the logged-in organization user.
+    
+    #Displays the dashboard for the logged-in organization user.
 
-    Parameters:
-    - org_id_param: The ID of the logged-in organization.
-    """
+    #Parameters:
+    #- org_id_param: The ID of the logged-in organization.
+    
     global org_id
     org_id = org_id_param
 
@@ -53,16 +53,16 @@ def show_org_dashboard(org_id_param):
     tk.Label(root, text="Organization Dashboard", font=FONT_TITLE, bg="#ffffff", fg=MAROON).pack(pady=(20, 10))
 
     def handle_choice(choice):
-        """
-        Handles button choices for dashboard actions.
+        
+        #Handles button choices for dashboard actions.
 
-        Parameters:
-        - choice: Integer representing action selected.
-            1 = Add Member
-            2 = Remove Member
-            3 = Edit Member
-            4 = View Members & Fees
-        """
+        #Parameters:
+        #- choice: Integer representing action selected.
+        #   1 = Add Member
+        #   2 = Remove Member
+        #   3 = Edit Member
+        #   4 = View Members & Fees
+        
         if choice == 1:
             root.withdraw()
             add_member.add_member_gui(org_id, parent_window=root)
@@ -91,9 +91,9 @@ def show_org_dashboard(org_id_param):
               command=main_menu).pack(pady=20)
 
 def login_attempt():
-    """
-    Displays the login screen and handles authentication for both organizations and members.
-    """
+    
+    #Displays the login screen and handles authentication for both organizations and members.
+    
     clear_screen()
 
     tk.Label(root, text="Login", font=FONT_TITLE, bg="#ffffff", fg=MAROON).pack(pady=(30, 10))
@@ -109,10 +109,10 @@ def login_attempt():
     password_entry.pack(pady=5)
 
     def authenticate():
-        """
-        Authenticates the user based on username and password input.
-        Redirects to either organization dashboard or member GUI.
-        """
+        
+        #Authenticates the user based on username and password input.
+        #Redirects to either organization dashboard or member GUI.
+        
         username = username_entry.get()
         password = password_entry.get()
 
@@ -149,9 +149,9 @@ def login_attempt():
               command=main_menu).pack(pady=5)
 
 def main_menu():
-    """
-    Displays the main menu of the portal with options to Login or Exit.
-    """
+    
+    #Displays the main menu of the portal with options to Login or Exit.
+    
     clear_screen()
     root.deiconify()
 

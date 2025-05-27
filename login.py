@@ -26,7 +26,8 @@ def login():
                 print("========== What do you want to do? ==========")
                 print("[1] Add Members")
                 print("[2] Remove Members")
-                print("[3] View Members and Fees")
+                print("[3] Edit Members")
+                print("[4] View Members and Fees")
                 answer = input("Enter choice: ")
 
                 match answer:
@@ -34,7 +35,8 @@ def login():
                         add_member.add_member(org_id)
                     case '2':
                         remove_member.remove_member(org_id)
-                    case '3':
+                    #case '3':
+                    case '4':
                         org_login.org_login(org_id)
                     case _:
                         'Invalid choice.'

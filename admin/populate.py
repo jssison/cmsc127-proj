@@ -8,7 +8,8 @@ def insert_to_org(cursor, connection):
             INSERT INTO organization VALUES
             (1111, 'Statistics Society', 'statsoc@gmail.com', 'statsOnTop'),
             (2222, 'Computer Science Society', 'cmscsoc@gmail.com', 'cmscsocdabest'),
-            (3333, 'Chemistry Society', 'chemsoc@gmail.com', 'chemsocgogogo');
+            (3333, 'Chemistry Society', 'chemsoc@gmail.com', 'chemsocgogogo'),
+            (4444, 'Caballeros', 'caballeros@gmail.com', 'lesgbatangas');
             """
         )
     except mariadb.Error as e:
@@ -97,7 +98,11 @@ def insert_to_orghasmem(cursor, connection):
             (3333, 2024987, '2024-2025', 'Scholastic', '1st Semester', 'Member', '2024', 'Chem', 'Active'),
             (3333, 2023387, '2023-2024', 'Scholastic', '2nd Semester', 'Member', '2023', 'Proton', 'Inactive'),
             (3333, 2022187, '2024-2025', 'Executive', '1st Semester', 'President', '2022', 'Ion', 'Active'),
-            (3333, 2021087, '2023-2024', 'Executive', '2nd Semester', 'President', '2021', 'Electron', 'Alumni');
+            (3333, 2021087, '2023-2024', 'Executive', '2nd Semester', 'President', '2021', 'Electron', 'Alumni'),
+            (4444, 2022123, '2024-2025', 'Pubilicity', '1st Semester', 'Member', '2024', 'Barako', 'Active'),
+            (4444, 2024345, '2024-2025', 'Pubilicity', '1st Semester', 'Member', '2024', 'Barako', 'Active'),
+            (4444, 2022779, '2023-2024', 'Executive', '1st Semester', 'Secretary', '2023', 'Lomi', 'Active'),
+            (4444, 2023387, '2023-2024', 'Finance', '2nd Semester', 'Member', '2023', 'Lomi', 'Inactive');
             """
         )
     except mariadb.Error as e:

@@ -1,5 +1,6 @@
 import mariadb
 
+# inserting sample data to the organization table
 def insert_to_org(cursor, connection):
     try:
         cursor.execute(
@@ -15,6 +16,7 @@ def insert_to_org(cursor, connection):
     
     connection.commit()
 
+# inserting sample data to the member table
 def insert_to_mem(cursor, connection):
     try:
         cursor.execute(
@@ -46,6 +48,7 @@ def insert_to_mem(cursor, connection):
 
     connection.commit()
 
+# inserting sample data to the fee table
 def insert_to_fee(cursor, connection):
     try:
         cursor.execute(
@@ -70,6 +73,7 @@ def insert_to_fee(cursor, connection):
 
     connection.commit()
 
+# inserting sample data to the organization_has_member table
 def insert_to_orghasmem(cursor, connection):
     try:
         cursor.execute(
@@ -101,6 +105,7 @@ def insert_to_orghasmem(cursor, connection):
 
     connection.commit()
 
+# inserting sample data to the member_pays_fee table
 def insert_to_mempaysfee(cursor, connection):
     try:
         cursor.execute(

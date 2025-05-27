@@ -14,10 +14,10 @@ try:
     # Connection credentials
     # Connect to mariadb via conn
     conn = mariadb.connect(
-        user = 'root',          #Change if desired
-        password = '',          #Password for desired user
+        user = 'root',          #Change if desiredCREATE DATABASE proj127;
+        password = 'marcusreyes04',          #Password for desired user
         host = 'localhost',
-        database = ''           #Insert 127 database here
+        database = 'proj127'           #Insert 127 database here
     )
 except mariadb.Error as e:
     print(f'Error connect to MariaDB: {e}')

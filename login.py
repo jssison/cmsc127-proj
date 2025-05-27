@@ -1,5 +1,6 @@
 from admin import connect
 import org_login
+import member_login
 
 org_id = None
 mem_id = None
@@ -41,7 +42,10 @@ def login():
             connect.cur.execute("SELECT * FROM member WHERE mem_uname = ? AND mem_pword = ?", (username, password))
             authenticate2 = connect.cur.fetchone()
             if authenticate2:
-                print("\nWelcome!")
+                mem_id = authenticate2[0]
+                print(f"\nWelcome, {authenticate2[3]}!") 
+                member_login.member_login(mem_id)
+
             else:
                 print('\nInvalid credentials')
 

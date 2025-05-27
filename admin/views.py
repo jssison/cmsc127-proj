@@ -284,7 +284,7 @@ def view_total_fees(cursor, connection, org_id, given_date):
     return cursor.fetchall()
 
 #10
-def view_unpaid(cursor, connection, org_id, sem, acad_yr):
+def view_unpaid(cursor, connection, org_id, sem):
     try:
         cursor.execute(f"""
         CREATE OR REPLACE VIEW highest_debt AS
@@ -300,14 +300,14 @@ def view_unpaid(cursor, connection, org_id, sem, acad_yr):
             FROM member mem
             JOIN member_pays_fee mpf ON mem.mem_id = mpf.mem_id
             JOIN fee f ON mpf.fee_refnum = f.fee_refnum
-            WHERE f.org_id = {org_id} AND mpf.semester = '{sem}' AND mpf.academic_year = '{acad_yr}'
+            WHERE f.org_id = {org_id} AND mpf.semester = '{sem}'
             GROUP BY mem.mem_id, mem.fname,mem.lname
             HAVING `Unpaid Amount` > 0 AND `Unpaid Amount` = (SELECT MAX(total_unpaid) FROM(SELECT mem1.mem_id, SUM(CASE WHEN 
                 mpf1.payment_status != 'Paid' THEN f1.amount 
                 ELSE 0 END) AS total_unpaid FROM member mem1
                 JOIN member_pays_fee mpf1 ON mem1.mem_id = mpf1.mem_id
                 JOIN fee f1 ON mpf1.fee_refnum = f1.fee_refnum
-                WHERE f1.org_id = {org_id} AND mpf1.semester = '{sem}' AND mpf1.academic_year = '{acad_yr}'
+                WHERE f1.org_id = {org_id} AND mpf1.semester = '{sem}'
                 GROUP BY mem1.mem_id
             ) AS high_debt
         );

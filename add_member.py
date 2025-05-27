@@ -6,7 +6,6 @@ def add_member(org_id):
     try:
         # Get member details
         mem_id = input("Enter Member ID: ")
-        email = input("Email: ")
         username = input("Username: ")
         password = input("Password: ")
         fname = input("First name: ")
@@ -39,20 +38,20 @@ def add_member(org_id):
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         """, (org_id, mem_id, academic_year, committee, semester, org_role, batch_year, batch_name, mem_status))
 
-        '''
+        
         #Add fee obligations for this member based on active fees
-        connect.cur.execute("SELECT fee_refnum, due_date FROM fee WHERE org_id = ?", (org_id,))
-        fees = connect.cur.fetchall()
+        #connect.cur.execute("SELECT fee_refnum, due_date FROM fee WHERE org_id = ?", (org_id,))
+        #fees = connect.cur.fetchall()
 
-        for fee_ref, due_date in fees:
-            connect.cur.execute("""
-                INSERT INTO member_pays_fee (
-                    mem_id, fee_refnum, academic_year, semester,
-                    date_of_payment, payment_status
-                )
-                VALUES (?, ?, ?, ?, NULL, 'Not Paid')
-            """, (mem_id, fee_ref, academic_year, semester))
-        '''
+        #for fee_ref, due_date in fees:
+        #    connect.cur.execute("""
+        #        INSERT INTO member_pays_fee (
+        #            mem_id, fee_refnum, academic_year, semester,
+        #            date_of_payment, payment_status
+        #        )
+        #        VALUES (?, ?, ?, ?, NULL, 'Not Paid')
+         #   """, (mem_id, fee_ref, academic_year, semester))
+        #'''
 
         connect.conn.commit()
         print(f"Member {fname} {lname} has been added successfully.")

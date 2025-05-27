@@ -1,6 +1,8 @@
 from admin import connect
 import org_login
 import member_login
+import remove_member
+import add_member
 
 org_id = None
 mem_id = None
@@ -28,8 +30,10 @@ def login():
                 answer = input("Enter choice: ")
 
                 match answer:
-                    #case '1':
-                    #case '2':
+                    case '1':
+                        add_member.add_member(org_id)
+                    case '2':
+                        remove_member.remove_member(org_id)
                     case '3':
                         org_login.org_login(org_id)
                     case _:

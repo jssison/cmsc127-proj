@@ -5,16 +5,16 @@ import re
 from admin import connect
 
 def add_member_gui(org_id, parent_window=None):
-    """
-    Opens a new window to add a member to the specified organization.
+    
+    # Opens a new window to add a member to the specified organization.
 
-    Parameters:
-    - org_id: The ID of the organization the member belongs to.
-    - parent_window: Optional; the parent Tkinter window to return to after closing this window.
+    # Parameters:
+    # - org_id: The ID of the organization the member belongs to.
+    # - parent_window: Optional; the parent Tkinter window to return to after closing this window.
 
-    Creates a scrollable form with multiple fields for member details,
-    validates inputs, and inserts data into the database upon submission.
-    """
+    # Creates a scrollable form with multiple fields for member details,
+    # validates inputs, and inserts data into the database upon submission.
+    
     add_win = tk.Toplevel()
     add_win.title("Add New Member")
     add_win.geometry("450x650")
@@ -25,7 +25,7 @@ def add_member_gui(org_id, parent_window=None):
     FONT_ENTRY = ("Helvetica", 11)
 
     def on_close():
-        """Handles window close event: destroys add member window and restores parent window if provided."""
+        # Handles window close event: destroys add member window and restores parent window if provided.
         if parent_window:
             parent_window.deiconify()
         add_win.destroy()
@@ -60,27 +60,27 @@ def add_member_gui(org_id, parent_window=None):
 
     # --- Input Validators ---
     def validate_alnum(P):
-        """Allows only alphanumeric characters or empty input."""
+        #Allows only alphanumeric characters or empty input.
         return P.isalnum() or P == ""
 
     def validate_numeric(P):
-        """Allows only digits or empty input."""
+        #Allows only digits or empty input.
         return P.isdigit() or P == ""
 
     def validate_alpha_space_dash(P):
-        """Allows only letters, spaces, or hyphens, or empty input."""
+        #Allows only letters, spaces, or hyphens, or empty input.
         return all(c.isalpha() or c.isspace() or c == '-' for c in P) or P == ""
 
     def validate_gender(P):
-        """Allows only 'M', 'F', or empty input."""
+        #Allows only 'M', 'F', or empty input.
         return P.upper() in ("M", "F", "")  # Allow empty for editing
 
     def validate_year_format(P):
-        """Allows either empty, digits, or digit-digit format like '2024-2025'."""
+        #Allows either empty, digits, or digit-digit format like '2024-2025'.
         return re.fullmatch(r"(\d{0,4}(-\d{0,4})?)?", P) is not None
 
     def validate_numeric(P):
-        """(Redefinition) Allows digits or empty input."""
+        #(Redefinition) Allows digits or empty input.
         return P.isdigit() or P == ""
 
     # Helper function to add a label and entry widget to the form
@@ -118,10 +118,10 @@ def add_member_gui(org_id, parent_window=None):
     btn_frame.pack(pady=20, fill='x', padx=10)
 
     def submit():
-        """
-        Collects form data, validates required fields and specific constraints,
-        inserts member data into the database, and shows success or error messages.
-        """
+        
+        # Collects form data, validates required fields and specific constraints,
+        # inserts member data into the database, and shows success or error messages.
+
         data = {}
         for label, (entry, required) in entries.items():
             val = entry.get().strip()

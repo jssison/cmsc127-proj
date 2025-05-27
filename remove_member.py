@@ -22,7 +22,11 @@ def remove_member(org_id, parent_window):
             widget.destroy()
 
     clear_frame()
+    
+    # Ensure parent window is visible and properly configured
+    parent_window.deiconify()  # Make sure window is visible
     parent_window.config(bg=WHITE)
+    parent_window.update()  # Force update to ensure changes are applied
 
     title = tk.Label(parent_window, text="REMOVE A MEMBER", font=("Helvetica", 16, "bold"))
     style_label(title)
@@ -81,6 +85,9 @@ def remove_member(org_id, parent_window):
     style_button(submit_btn)
     submit_btn.pack(pady=10)
 
-    back_btn = tk.Button(parent_window, text="Back", command=lambda: parent_window.event_generate("<<BackToDashboard>>"))
+    def go_back():
+        parent_window.event_generate("<<BackToDashboard>>")
+
+    back_btn = tk.Button(parent_window, text="Back", command=go_back)
     style_button(back_btn)
     back_btn.pack(pady=5)

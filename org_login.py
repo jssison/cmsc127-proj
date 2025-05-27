@@ -32,7 +32,7 @@ def set_tree_columns(tree, cols):
 
 # ---- MEMBERS MENU ----
 def open_members_menu(main_menu_win, org_id):
-    """Displays member-related views (executives, alumni, etc.) for an organization."""
+    #Displays member-related views (executives, alumni, etc.) for an organization.
     main_menu_win.withdraw()
 
     win = tk.Toplevel(main_menu_win)
@@ -76,7 +76,7 @@ def open_members_menu(main_menu_win, org_id):
         input_vars[var_name] = ent
 
     def update_inputs(*args):
-        """Adjust input fields based on selected option."""
+        #Adjust input fields based on selected option.
         clear_inputs()
         opt = selected_option.get()
         if opt == "members": # viewing all the members of the organization in the database
@@ -106,7 +106,7 @@ def open_members_menu(main_menu_win, org_id):
     tree.tag_configure('maroon_row', background='#800000', foreground='white')
 
     def run_query():
-        """Run the appropriate query based on selected option and input."""
+        #Run the appropriate query based on selected option and input.
         opt = selected_option.get()
         try:
             if opt == "members":
@@ -175,7 +175,7 @@ def open_members_menu(main_menu_win, org_id):
 
 # ---- FEES MENU ----
 def open_fees_menu(main_menu_win, org_id):
-    """Displays fee-related views for an organization (unpaid, totals, etc.)."""
+    #Displays fee-related views for an organization (unpaid, totals, etc.).
     main_menu_win.withdraw()
 
     win = tk.Toplevel(main_menu_win)
@@ -300,7 +300,7 @@ def open_fees_menu(main_menu_win, org_id):
 
 # ---- MAIN ORGANIZATION MENU ----
 def main(parent, org_id):
-    """Launch the organization's main menu (access to members and fees menus)."""
+    #Launch the organization's main menu (access to members and fees menus).
     parent.withdraw()  # Hide dashboard
 
     win = tk.Toplevel(parent)

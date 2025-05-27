@@ -152,7 +152,6 @@ def view_role(cursor, connection, role, org_id):
         print(f'Error generating view {e}')
 
     connection.commit()
-    #Notify user of view creation success
 
     cursor.execute("SELECT * FROM presidents")
     return cursor.fetchall()

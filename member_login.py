@@ -75,16 +75,21 @@ def member_login_gui(mem_id, root_window=None):
     for col in columns:
         tree.column(col, anchor="w", width=300)
 
+    #For displaying the name, degprog, and gender only once
+    count = 0
+
     # Parse and insert data into the treeview
     for row in rows:
         fname, mname, lname, degprog, gender, org_name, committee, semester, batch_name, mem_status, batch_year = row
         full_name = f"{fname} {mname + ' ' if mname else ''}{lname}"
 
-        tree.insert("", "end", values=("Full Name", full_name))
+        if(count == 0):
+            # Insert only these top three fields
+            tree.insert("", "end", values=("Full Name", full_name))
+            tree.insert("", "end", values=("Degree Program", degprog))
+            tree.insert("", "end", values=("Gender", gender))
 
         info = [
-            ("Degree Program", degprog),
-            ("Gender", gender),
             ("Organization", org_name),
             ("Committee", committee),
             ("Semester", semester),
@@ -93,8 +98,13 @@ def member_login_gui(mem_id, root_window=None):
             ("Batch Year", batch_year)
         ]
 
+        count = count + 1
+
         for field, value in info:
             tree.insert("", "end", values=(field, value))
+
+        #Spacer
+        tree.insert("", "end", values=("", ""))
 
     # Unpaid fees section with try-except to handle potential query failures
     try:

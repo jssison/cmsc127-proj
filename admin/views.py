@@ -1,7 +1,5 @@
 import mariadb
 
-#TODO: Implement views 2-9
-
 #NOTES: (param passing)
 # cur (in connect.py) is the same as cursor (in functions)
 # conn (in connect.py) is the same as connection (in functions)
@@ -44,7 +42,7 @@ def view_members_by(cursor, connection, order, org_id):
         cursor.execute("SELECT * FROM members_by_details")
         return cursor.fetchall()
 
-#2
+# create or replace a view for viewing all members of the organization with unpaid fees
 def view_unpaid_members(cursor, connection, org_id, sem, acad_yr):
     try:
         cursor.execute(f"""
@@ -72,7 +70,8 @@ def view_unpaid_members(cursor, connection, org_id, sem, acad_yr):
 
     cursor.execute("SELECT * FROM member_with_unpaid_membership_fees")
     return cursor.fetchall()
-#3
+    
+# for the function of viewing the member's specific unpaid fees (MEMBER's pov)
 def view_unpaid_fees(cursor, connection, member):
     try:
         cursor.execute(f"""
@@ -100,7 +99,7 @@ def view_unpaid_fees(cursor, connection, member):
     cursor.execute("SELECT * FROM unpaid_member_fees")
     return cursor.fetchall()
 
-#4
+# for showing all the members in executive committee based on the chosen academic year
 def view_executive_members(cursor, connection, org_id, acad_yr):
     try:
         cursor.execute(f"""
@@ -128,7 +127,7 @@ def view_executive_members(cursor, connection, org_id, acad_yr):
     cursor.execute("SELECT * FROM executive_committee_members")
     return cursor.fetchall()
 
-#5
+# showing the list of past and current members in position (position is specified by the user)
 def view_role(cursor, connection, role, org_id):
     try:
         cursor.execute(f"""
@@ -157,7 +156,8 @@ def view_role(cursor, connection, role, org_id):
 
     cursor.execute("SELECT * FROM presidents")
     return cursor.fetchall()
-#6
+    
+# for all members with late payments
 def view_late_payments(cursor, connection, org_id, sem, acad_yr):
     try:
         cursor.execute(f"""
@@ -192,7 +192,7 @@ def view_late_payments(cursor, connection, org_id, sem, acad_yr):
     cursor.execute("SELECT * FROM late_payments_view")
     return cursor.fetchall()
 
-#7
+# shows the percentage of active and inactive members from the past n semesters
 def view_percentage(cursor, connection, org_id, num_of_sems):
     try:
         #getting the last no. of semesters
@@ -230,7 +230,7 @@ def view_percentage(cursor, connection, org_id, num_of_sems):
 
     connection.commit()
 
-#8
+# alumni as of given date
 def view_alumni(cursor, connection, org_id, given_date):
     try:
         cursor.execute(f"""
@@ -258,7 +258,7 @@ def view_alumni(cursor, connection, org_id, given_date):
     cursor.execute("SELECT * FROM alumni_members")
     return cursor.fetchall()
 
-#9
+# shows the total paid and unpaid amount of the org(total of the members' fees)
 def view_total_fees(cursor, connection, org_id, given_date):
     try:
         cursor.execute(f"""
@@ -283,7 +283,7 @@ def view_total_fees(cursor, connection, org_id, given_date):
     cursor.execute("SELECT * FROM total_unpaid")
     return cursor.fetchall()
 
-#10
+# shows the member/s with highest unpaid fee or debt
 def view_unpaid(cursor, connection, org_id, sem):
     try:
         cursor.execute(f"""

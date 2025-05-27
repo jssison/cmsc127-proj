@@ -44,7 +44,7 @@ def create_fee(cursor, connection):
     try:
         cursor.execute("""
         CREATE TABLE IF NOT EXISTS fee(
-            fee_refnum INT(10),
+            fee_refnum INT AUTO_INCREMENT,
             category VARCHAR(20) NOT NULL, 
             due_date DATE NOT NULL,
             amount INT NOT NULL,

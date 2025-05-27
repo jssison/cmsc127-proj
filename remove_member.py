@@ -22,7 +22,7 @@ def style_label(label):
 
 # Main function to handle member removal UI and logic
 def remove_member(org_id, parent_window):
-    """Displays the UI and logic to remove a member from the organization."""
+    # Displays the UI and logic to remove a member from the organization.
     
     # Clear any existing widgets in the parent window
     def clear_frame():

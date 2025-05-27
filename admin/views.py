@@ -169,29 +169,43 @@ def view_late_payments(cursor, connection, org_id, sem, acad_yr):
         return []
 
 # View percentage of active vs inactive members
+#7
 def view_percentage(cursor, connection, org_id, num_of_sems):
     try:
+        #getting the last no. of semesters
+        cursor.execute(f"""
+            SELECT DISTINCT academic_year, semester
+            FROM organization_has_member
+            WHERE org_id = {org_id}
+            ORDER BY academic_year DESC, semester DESC
+            LIMIT {num_of_sems}
+        """)
+        recent_sems = cursor.fetchall()
+
+        #filtering all the included sems based on the input (useful for counting total members)
+        acad_sem = " OR ".join(
+            f"(academic_year = '{year}' AND semester = '{sem}')" for year, sem in recent_sems
+        )
+
         cursor.execute(f"""
             CREATE OR REPLACE VIEW active_vs_inactive_percentage AS
-            SELECT academic_year,
-                semester,
+            SELECT 
                 COUNT(*) AS total_members,
                 SUM(mem_status = 'Active') AS active_count,
                 SUM(mem_status = 'Inactive') AS inactive_count,
                 ROUND((SUM(mem_status = 'Active') / COUNT(*)) * 100, 2) AS active_percentage,
                 ROUND((SUM(mem_status = 'Inactive') / COUNT(*)) * 100, 2) AS inactive_percentage
             FROM organization_has_member
-            WHERE org_id = '{org_id}'
-            GROUP BY academic_year, semester
-            ORDER BY academic_year DESC, semester DESC
-            LIMIT {num_of_sems};
+            WHERE org_id = {org_id} AND ({acad_sem});
         """)
-        connection.commit()
+
         cursor.execute("SELECT * FROM active_vs_inactive_percentage")
         return cursor.fetchall()
+
     except mariadb.Error as e:
         print(f'Error generating view: {e}')
-        return []
+
+    connection.commit()
 
 # View alumni as of a given date
 def view_alumni(cursor, connection, org_id, given_date):

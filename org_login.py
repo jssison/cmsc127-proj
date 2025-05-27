@@ -1,8 +1,6 @@
 from admin import connect
 import login
 from admin import views
-
-
 from tabulate import tabulate
 
 #Printing of rows
@@ -128,7 +126,8 @@ def org_login(org_id):
                         
                         case '3':
                             semester = input("Enter semester (e.g., 1st Semester): ")
-                            rows = views.view_late_payments(connect.cur, connect.conn, org_id, semester, acad_year)
+                            acad_year = input("Enter academic year (e.g., 2024–2025): ")
+                            rows = views.view_unpaid(connect.cur, connect.conn, org_id, semester, acad_year)
                             
                             if not rows:
                                     print(f"\nNo members have debt for {semester}, {acad_year}.")

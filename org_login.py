@@ -246,7 +246,8 @@ def open_fees_menu(main_menu_win, org_id):
                     return
                 rows = views.view_unpaid_members(connect.cur, connect.conn, org_id, semester, acad_year)
                 if rows:
-                    set_tree_columns(tree, [f"Column {i+1}" for i in range(len(rows[0]))])
+                    headers = ["Membership ID", "Full Name", "Degree Program", "Gender", "Organization ID", "Academic Year", "Semester"]
+                    set_tree_columns(tree, headers)
                     print_rows_treeview(tree, rows)
                 else:
                     set_tree_columns(tree, [])
@@ -260,7 +261,8 @@ def open_fees_menu(main_menu_win, org_id):
                     return
                 rows = views.view_late_payments(connect.cur, connect.conn, org_id, semester, acad_year)
                 if rows:
-                    set_tree_columns(tree, [f"Column {i+1}" for i in range(len(rows[0]))])
+                    headers = ["Membership ID", "Full Name", "Degree Program", "Gender", "Organization ID", "Academic Year", "Semester", "Fee Reference Number", "Due Date", "Date of Payment", "Status"]
+                    set_tree_columns(tree, headers)
                     print_rows_treeview(tree, rows)
                 else:
                     set_tree_columns(tree, [])
@@ -273,7 +275,8 @@ def open_fees_menu(main_menu_win, org_id):
                     return
                 rows = views.view_unpaid(connect.cur, connect.conn, org_id, semester)
                 if rows:
-                    set_tree_columns(tree, [f"Column {i+1}" for i in range(len(rows[0]))])
+                    headers = ["Membership ID", "Full Name", "Unpaid Amount"]
+                    set_tree_columns(tree, headers)
                     print_rows_treeview(tree, rows)
                 else:
                     set_tree_columns(tree, [])

@@ -1,7 +1,40 @@
+import tkinter as tk
+from tkinter import ttk, messagebox
 from admin import connect
 
-def member_login(mem_id):
-    # First: display the member and org details (as before)
+def member_login_gui(mem_id, root_window=None):
+    member_window = tk.Toplevel()
+    member_window.title("Member Dashboard")
+    member_window.geometry("700x600")
+    member_window.configure(bg="#ffffff")
+
+    header_font = ("Helvetica", 14, "bold")
+    label_font = ("Helvetica", 11)
+    maroon = "#800000"
+    white = "#ffffff"
+
+    tk.Label(member_window, text="Member Dashboard", font=header_font, fg=maroon, bg=white).pack(pady=10)
+
+    # Style setup for Treeview with maroon background
+    style = ttk.Style()
+    style.theme_use("default")
+
+    style.configure("Maroon.Treeview",
+                    background=maroon,
+                    fieldbackground=maroon,
+                    foreground=white,
+                    font=label_font,
+                    rowheight=25)
+    style.configure("Maroon.Treeview.Heading",
+                    background=maroon,
+                    foreground=white,
+                    font=(label_font[0], label_font[1], "bold"))
+
+    style.map('Maroon.Treeview',
+              background=[('selected', '#b03030')],
+              foreground=[('selected', white)])
+
+    # Fetch member and org details
     connect.cur.execute("""
         SELECT 
             m.fname, m.mname, m.lname, m.degprog, m.gender,
@@ -12,60 +45,102 @@ def member_login(mem_id):
         JOIN organization o ON ohm.org_id = o.org_id
         WHERE m.mem_id = ?
     """, (mem_id,))
-    
     rows = connect.cur.fetchall()
 
-    if rows:
-        print("\n========== Member Dashboard ==========")
-        for row in rows:
-            fname, mname, lname, degprog, gender, org_name, committee, semester, batch_name, mem_status, batch_year = row
-            full_name = f"{fname} {mname + ' ' if mname else ''}{lname}"
-            print(f"Name         : {full_name}")
-            print(f"Degree Prog  : {degprog}")
-            print(f"Gender       : {gender}")
-            print(f"Org Name     : {org_name}")
-            print(f"Committee    : {committee}")
-            print(f"Semester     : {semester}")
-            print(f"Batch Name   : {batch_name}")
-            print(f"Member Status: {mem_status}")
-            print(f"Batch Year   : {batch_year}")
-            print("-" * 40)
+    if not rows:
+        messagebox.showerror("Error", "No membership or organization data found.")
+        return
 
-        # use view
-        try:
-            connect.cur.execute(f"""
-                CREATE OR REPLACE VIEW unpaid_member_fees AS
-                SELECT fee.fee_refnum AS `Fee reference number`,
-                    fee.category AS `Category`,
-                    fee.due_date AS `Due date`,
-                    fee.amount AS `Amount`,
-                    org.org_name AS `Organization Name`,
-                    mem_fee.academic_year AS `Academic Year`,
-                    mem_fee.semester AS `Semester`,
-                    mem_fee.payment_status AS `Payment Status`
-                FROM member mem
-                JOIN member_pays_fee mem_fee ON mem.mem_id = mem_fee.mem_id
-                JOIN fee ON mem_fee.fee_refnum = fee.fee_refnum
-                JOIN organization org ON fee.org_id = org.org_id
-                WHERE mem.mem_id = '{mem_id}' AND mem_fee.payment_status = 'Not Paid';
-            """)
-            connect.conn.commit()
+    # Put a label on top as combined header
+    tk.Label(member_window, text="Member Details", font=("Helvetica", 12, "bold"), bg=maroon, fg=white).pack(padx=20, pady=(10,0), fill='x')
 
-            connect.cur.execute("SELECT * FROM unpaid_member_fees")
-            unpaid_fees = connect.cur.fetchall()
+    # Create the Treeview with two columns: Field and Value, but hide the headers
+    columns = ("Field", "Value")
+    tree_frame = tk.Frame(member_window, bg=white)
+    tree_frame.pack(padx=20, pady=10, fill="x")
 
-            if unpaid_fees:
-                print("\n📌 Unpaid Fees:")
-                total = 0
-                for fee in unpaid_fees:
-                    ref, cat, due, amt, org, acad_yr, sem, status = fee
-                    print(f"{cat} - ₱{amt} | Due: {due} | Org: {org} | AY: {acad_yr}, {sem}")
-                    total += amt
-                print(f"\n Total Unpaid Fees: ₱{total}")
-            else:
-                print("\nYehey! You have no unpaid fees!")
+    tree = ttk.Treeview(tree_frame, columns=columns, show="", height=10, style="Maroon.Treeview")  # show="" hides headers
+    tree.pack(fill="x", expand=True)
 
-        except Exception as e:
-            print(f"Error displaying unpaid fees: {e}")
-    else:
-        print("\nNo membership or organization data found.")
+    for col in columns:
+        tree.column(col, anchor="w", width=300)
+
+    for row in rows:
+        fname, mname, lname, degprog, gender, org_name, committee, semester, batch_name, mem_status, batch_year = row
+        full_name = f"{fname} {mname + ' ' if mname else ''}{lname}"
+
+        # Insert first row with "Member Details" as Field and full name as Value
+        tree.insert("", "end", values=("Full Name", full_name))
+
+        # Insert other fields separately
+        info = [
+            ("Degree Program", degprog),
+            ("Gender", gender),
+            ("Organization", org_name),
+            ("Committee", committee),
+            ("Semester", semester),
+            ("Batch Name", batch_name),
+            ("Member Status", mem_status),
+            ("Batch Year", batch_year)
+        ]
+
+        for field, value in info:
+            tree.insert("", "end", values=(field, value))
+
+    # Unpaid Fees Section
+    try:
+        connect.cur.execute(f"""
+            CREATE OR REPLACE VIEW unpaid_member_fees AS
+            SELECT fee.fee_refnum AS `Fee reference number`,
+                   fee.category AS `Category`,
+                   fee.due_date AS `Due date`,
+                   fee.amount AS `Amount`,
+                   org.org_name AS `Organization Name`,
+                   mem_fee.academic_year AS `Academic Year`,
+                   mem_fee.semester AS `Semester`,
+                   mem_fee.payment_status AS `Payment Status`
+            FROM member mem
+            JOIN member_pays_fee mem_fee ON mem.mem_id = mem_fee.mem_id
+            JOIN fee ON mem_fee.fee_refnum = fee.fee_refnum
+            JOIN organization org ON fee.org_id = org.org_id
+            WHERE mem.mem_id = '{mem_id}' AND mem_fee.payment_status = 'Not Paid';
+        """)
+        connect.conn.commit()
+
+        connect.cur.execute("SELECT * FROM unpaid_member_fees")
+        unpaid_fees = connect.cur.fetchall()
+
+        tk.Label(member_window, text="\n📌 Unpaid Fees", font=header_font, fg=maroon, bg=white).pack(pady=10)
+
+        if unpaid_fees:
+            frame = tk.Frame(member_window, bg=white)
+            frame.pack(padx=20, fill='both', expand=True)
+
+            cols = ["Category", "Amount", "Due Date", "Org Name", "Academic Year", "Semester"]
+            tree_fees = ttk.Treeview(frame, columns=cols, show="headings", height=6, style="Maroon.Treeview")
+            for col in cols:
+                tree_fees.heading(col, text=col)
+                tree_fees.column(col, anchor="center")
+
+            total_amt = 0
+            for fee in unpaid_fees:
+                ref, cat, due, amt, org, ay, sem, status = fee
+                tree_fees.insert("", "end", values=(cat, f"₱{amt}", due, org, ay, sem))
+                total_amt += amt
+
+            tree_fees.pack(fill="both", expand=True)
+
+            tk.Label(member_window, text=f"\nTotal Unpaid Fees: ₱{total_amt}", font=label_font, fg=maroon, bg=white).pack(pady=10)
+        else:
+            tk.Label(member_window, text="Yehey! You have no unpaid fees!", font=label_font, fg=maroon, bg=white).pack(pady=10)
+
+    except Exception as e:
+        messagebox.showerror("Error", f"Error displaying unpaid fees:\n{e}")
+
+    # Back Button
+    def go_back():
+        if root_window:
+            root_window.deiconify()
+        member_window.destroy()
+
+    tk.Button(member_window, text="Back", command=go_back, bg=maroon, fg=maroon, font=label_font).pack(pady=15)

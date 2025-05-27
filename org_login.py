@@ -186,7 +186,7 @@ def open_fees_menu(main_menu_win, org_id):
     options = [
         ("List of Unpaid Members", "unpaid"),
         ("Late Payments by all Members", "late"),
-        ("Highest Member/s with Unpaid Fees", "highest"),
+        ("Member/s with Highest Unpaid Fees", "highest"),
         ("Total Unpaid and Paid Fees", "total"),
     ]
 
@@ -271,7 +271,7 @@ def open_fees_menu(main_menu_win, org_id):
                 if not semester:
                     messagebox.showerror("Input Error", "Semester is required.")
                     return
-                rows = views.view_late_payments(connect.cur, connect.conn, org_id, semester, None)
+                rows = views.view_unpaid(connect.cur, connect.conn, org_id, semester)
                 if rows:
                     set_tree_columns(tree, [f"Column {i+1}" for i in range(len(rows[0]))])
                     print_rows_treeview(tree, rows)
